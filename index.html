@@ -16,46 +16,46 @@
          <button id="tweet"><img src="TwitterX.png.png" height="20px" width="20px"> Tweet</button>
      </div>
   </div>
-
 <script>
 const quote = document.getElementById("quote");
 const author = document.getElementById("author");
-const api_url = "HTTPS://api.quotable.io/random";
+
+const api_url = "https://api.quotable.io/random";
 
 async function getquote() {
+  quote.textContent = "Loading...";
+  author.textContent = "Please wait...";
+
   try {
-    quote.innerHTML = "Loading...";
-    author.innerHTML = "Please wait...";
     const response = await fetch(api_url);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch quote");
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    quote.innerHTML = `"${data.content}"`;
-    author.innerHTML = `— ${data.author}`;
+    console.log("Fetched quote:", data);
+
+    quote.textContent = `"${data.content}"`;
+    author.textContent = `— ${data.author}`;
   } catch (error) {
-    console.error(error);
-    quote.innerHTML = "Sorry, failed to load quote 😔";
-    author.innerHTML = "";
+    console.error("Error fetching quote:", error);
+    quote.textContent = "Could not load a quote 😔";
+    author.textContent = "";
   }
 }
 
 function Tweet() {
-  const tweetText = `${quote.innerText} — ${author.innerText}`;
-  window.open(
-    "https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweetText),
-    "Tweet Window",
-    "width=600,height=300"
-  );
+  const tweetText = `${quote.innerText} ${author.innerText}`;
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+  window.open(tweetUrl, "_blank");
 }
 
+// Automatically load a quote when page opens
 document.addEventListener("DOMContentLoaded", getquote);
-</script>
 
-  
 </body>
 </html>
+
 
 
